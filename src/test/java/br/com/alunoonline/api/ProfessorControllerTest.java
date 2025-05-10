@@ -1,9 +1,7 @@
-// Pacote onde está o teste
 package br.com.alunoonline.api;
 
-// Importações necessárias
 import br.com.alunoonline.api.controller.ProfessorController;
-import br.com.alunoonline.api.model.Professor;
+import br.com.alunoonline.api.dtos.ProfessorRequestDTO;
 import br.com.alunoonline.api.service.ProfessorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,45 +12,48 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Classe de teste para o controller ProfessorController.
- * Estamos testando o endpoint POST que cria um novo professor.
+ * Testa o comportamento da chamada HTTP para criar um professor.
+ * Simula o envio de um JSON com nome, cpf, email, cep e número.
  */
-@WebMvcTest(ProfessorController.class) // Diz ao Spring para inicializar apenas o Controller (testes leves e rápidos)
+@WebMvcTest(ProfessorController.class)
 public class ProfessorControllerTest {
 
     @Autowired
-    private MockMvc mockMvc; // Usado para simular requisições HTTP (sem subir o servidor)
+    private MockMvc mockMvc; // Ferramenta para simular requisições HTTP
 
     @MockBean
-    private ProfessorService professorService; // Mock do service para não usar banco de verdade
+    private ProfessorService professorService; // Simulamos o service
 
     @Autowired
-    private ObjectMapper objectMapper; // Usado para converter objetos em JSON
+    private ObjectMapper objectMapper; // Converte objetos Java para JSON
 
-    private Professor professor; // Objeto de teste
+    private ProfessorRequestDTO dto;
 
     @BeforeEach
     void setup() {
-        // Criando um objeto Professor para usar nos testes
-        professor = new Professor(1L, "João da Silva", "joao@email.com", "12345678900");
+        // Simulamos os dados da requisição
+        dto = new ProfessorRequestDTO();
+        dto.setNome("João da Silva");
+        dto.setEmail("joao@email.com");
+        dto.setCpf("12345678900");
+        dto.setCep("01001-000");
+        dto.setNumero("100");
     }
 
     @Test
-    void deveCriarProfessorComSucesso() throws Exception {
-        // Realiza uma requisição POST simulada para o endpoint /professores
+    void deveCriarProfessorComEnderecoAutoPreenchido() throws Exception {
+        // Faz uma chamada POST simulada para /professores
         mockMvc.perform(post("/professores")
-                        .contentType(MediaType.APPLICATION_JSON) // Tipo do conteúdo (JSON)
-                        .content(objectMapper.writeValueAsString(professor))) // Corpo da requisição em JSON
-                .andExpect(status().isCreated()); // Verifica se o status de retorno foi 201 CREATED
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated()); // Esperamos resposta HTTP 201
 
-        // Verifica se o método criarProfessor foi chamado exatamente uma vez com qualquer objeto Professor
-        verify(professorService, times(1)).criarProfessor(any(Professor.class));
+        // Verificamos se o método do service foi chamado corretamente
+        verify(professorService, times(1)).criarProfessor(any(ProfessorRequestDTO.class));
     }
 }
