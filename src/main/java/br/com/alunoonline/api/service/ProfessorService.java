@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -18,6 +20,10 @@ public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
     private final ViaCepClient viaCepClient;
+
+    public List<Professor> listar() {
+        return professorRepository.findAll();
+    }
 
     public void criarProfessor(Professor professor) {
         log.info("Criando Professor: {}", professor);
