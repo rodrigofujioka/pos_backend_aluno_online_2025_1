@@ -1,31 +1,47 @@
 package br.com.alunoonline.api.controller;
 
+import br.com.alunoonline.api.dtos.AlunoResponseDTO;
 import br.com.alunoonline.api.model.Aluno;
 import br.com.alunoonline.api.service.AlunoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/alunos")
 public class AlunoController {
 
-    @Autowired
-    AlunoService alunoService;
+    private final AlunoService alunoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criarAluno(@RequestBody Aluno aluno) {
+    public void criarAluno(@RequestBody @Valid Aluno aluno) {
+        log.info("Criando aluno : {}", aluno);
         alunoService.criarAluno(aluno);
+        log.info("Aluno criado : {}", aluno);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Aluno> listarTodosAlunos() {
+        log.info("Consultando lista de alunos ");
         return alunoService.listarTodosAlunos();
+    }
+
+    @GetMapping("/paginada")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<AlunoResponseDTO> listarTodosAlunos(Pageable pageable) {
+        log.info("Consultando alunos paginados");
+        return alunoService.listarTodosAlunosPaginado(pageable);
     }
 
     @GetMapping("/{id}")
