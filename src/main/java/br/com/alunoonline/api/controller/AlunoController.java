@@ -39,9 +39,11 @@ public class AlunoController {
 
     @GetMapping("/paginada")
     @ResponseStatus(HttpStatus.OK)
-    public Page<AlunoResponseDTO> listarTodosAlunos(Pageable pageable) {
+    public Page<AlunoResponseDTO>
+                  listarTodosAlunos(Pageable pageable) {
         log.info("Consultando alunos paginados");
-        return alunoService.listarTodosAlunosPaginado(pageable);
+        return alunoService.
+                 listarTodosAlunosPaginado(pageable);
     }
 
     @GetMapping("/{id}")

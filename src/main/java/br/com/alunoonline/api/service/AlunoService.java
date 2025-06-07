@@ -6,7 +6,6 @@ import br.com.alunoonline.api.repository.AlunoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -78,14 +77,5 @@ public class AlunoService {
         // COM O ALUNO TOTALMENTE EDITADO ACIMA
         // EU DEVOLVO ELE EDITADO/ATUALIZADO PARA O BANCO DE DADOS
         alunoRepository.save(alunoEditado);
-    }
-
-
-    public AlunoResponseDTO convertToDTO(Aluno aluno) {
-        return modelMapper.map(aluno, AlunoResponseDTO.class);
-    }
-
-    public Aluno convertToEntity(AlunoResponseDTO dto) {
-        return modelMapper.map(dto, Aluno.class);
     }
 }
