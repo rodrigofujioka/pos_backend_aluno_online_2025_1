@@ -22,4 +22,8 @@ public class Professor implements Serializable {
 
     private String cpf;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
+
 }
