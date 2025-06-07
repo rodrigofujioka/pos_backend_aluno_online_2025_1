@@ -8,6 +8,7 @@ import br.com.alunoonline.api.model.Professor;
 import br.com.alunoonline.api.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class ProfessorService {
 
     private final ProfessorRepository professorRepository;
     private final ViaCepClient viaCepClient;
+    private final ModelMapper modelMapper;
 
     public List<Professor> listar() {
         return professorRepository.findAll();
@@ -35,26 +37,8 @@ public class ProfessorService {
 
         log.info("Criando Professor: {}", professorDTO);
 
-        Endereco endereco = Endereco.builder()
-                .cep(enderecoDTO.getCep())
-                .logradouro(enderecoDTO.getLogradouro())
-                .complemento(enderecoDTO.getComplemento())
-                .bairro(enderecoDTO.getBairro())
-                .localidade(enderecoDTO.getLocalidade())
-                .uf(enderecoDTO.getUf())
-                .estado(enderecoDTO.getEstado())
-                .regiao(enderecoDTO.getRegiao())
-                .ibge(enderecoDTO.getIbge())
-                .gia(enderecoDTO.getGia())
-                .ddd(enderecoDTO.getDdd())
-                .siafi(enderecoDTO.getSiafi())
-                .numero(professorDTO.getNumero()) // dado manual
-                .build();
-
-        Professor professor = new Professor();
-        professor.setNome(professorDTO.getNome());
-        professor.setEmail(professorDTO.getEmail());
-        professor.setCpf(professorDTO.getCpf());
+        Endereco endereco = modelMapper.map(enderecoDTO, Endereco.class);
+        Professor professor = modelMapper.map(professorDTO, Professor.class);
         professor.setEndereco(endereco);
 
         professorRepository.save(professor);

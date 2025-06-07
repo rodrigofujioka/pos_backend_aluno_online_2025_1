@@ -1,5 +1,6 @@
 package br.com.alunoonline.api.model;
 
+import br.com.alunoonline.api.validator.ApenasIespEmail;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Aluno implements Serializable {
 
     @NotBlank
     @Email
+    @ApenasIespEmail
     private String email;
 
     private String cpf;

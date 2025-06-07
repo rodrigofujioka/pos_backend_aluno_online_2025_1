@@ -23,10 +23,8 @@ public class Endereco {
     private String uf;
     private String estado;
     private String regiao;
-    private String ibge;
-    private String gia;
     private String ddd;
-    private String siafi;
+
 
     private String numero; // campo preenchido manualmente
 }
